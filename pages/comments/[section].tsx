@@ -19,7 +19,20 @@ const Section = () => {
     const user = context?.user
     const axiosInstance = useAxios()
 
-    const getComments = useCallback(() => {
+    // const getComments = useCallback(() => {
+    //   const get = async () => {
+    //     try {
+    //       const response = await axiosInstance.get(`comments/${section}`)
+    //       setComments(response?.data)
+    //       return
+    //     } catch (error) {
+    //       return 
+    //     }
+    //   }
+    //   get()
+    // },[section, axiosInstance])
+
+    useEffect(() => {
       const get = async () => {
         try {
           const response = await axiosInstance.get(`comments/${section}`)
@@ -30,11 +43,9 @@ const Section = () => {
         }
       }
       get()
-    },[section, axiosInstance])
+    },[axiosInstance])
 
-    useEffect(() => {
-      getComments()
-    },[getComments])
+    const getComments = () => null
 
     return (
         <div className="bg-[#f5f6fa] min-h-screen flex flex-col gap-6 py-10">
