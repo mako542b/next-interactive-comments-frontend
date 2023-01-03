@@ -12,7 +12,6 @@ import useGetComments from "../../hooks/useGetComments"
 
 const Section = () => {
 
-    // const [comments, setComments] = useState<commentInterface[] | null>(null)
     const router = useRouter()
     let { section } = router.query
     const context = useContext(TokenContext)
@@ -20,27 +19,9 @@ const Section = () => {
     const axiosInstance = useAxios()
     const [refetch, setRefetch] = useState<boolean>(false)
 
-    const { comments, isLoading, error } = useGetComments<commentInterface[] | null>(`comments/${section}`, refetch)
+    const { comments, isLoading, error } = useGetComments<commentInterface[] | null>(section, refetch)
 
     const getComments = () => setRefetch(prev => !prev)
-
-    
-    // const getComments = useCallback(() => {
-    //   const get = async () => {
-    //     try {
-    //       const response = await axiosInstance.get(`comments/${section}`)
-    //       setComments(response?.data)
-    //       return
-    //     } catch (error) {
-    //       return 
-    //     }
-    //   }
-    //   get()
-    // },[section, axiosInstance])
-
-    // useEffect(() => {
-    //   getComments()
-    // },[getComments])
 
     return (
         <div className="bg-[#f5f6fa] min-h-screen flex flex-col gap-6 py-10">

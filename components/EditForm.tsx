@@ -23,7 +23,6 @@ const EditForm = ({setIsEditing, prevContent, commentId, getComments}: props) =>
         } catch (error) {
             return console.log(error)
         }
-        return
     }
 
      return (
