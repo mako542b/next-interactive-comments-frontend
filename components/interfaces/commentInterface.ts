@@ -1,10 +1,21 @@
+
+export interface UserInterface {
+    _id: string,
+    login: string,
+    avatar: string | null,
+}
+
+export interface ratingInterface {
+    ratingUserId: string,
+    rate: 'upvote' | 'downvote'
+}
+
 export interface commentInterface {
-    id: string,
-    img: string,
-    author: string,
-    updated: string,
+    user: UserInterface,
+    _id: string,
+    createdOn: string,
     content: string,
-    score: number,
+    rated: ratingInterface[],
     parentId: string | null,
-    responses: commentInterface[] | null,
+    replyingTo: string | null,
 }

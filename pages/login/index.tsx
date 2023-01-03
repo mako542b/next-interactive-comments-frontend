@@ -1,8 +1,15 @@
-import { FormEvent, useRef } from "react";
+import { FormEvent, useRef, useState } from "react";
+import Link from "next/link"
+import {useRouter} from "next/router";
+import useAxios from "../../hooks/useAxios";
 
 export default function Login() {
     const loginRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
+    const [error, setError] = useState<string | null>(null)
+    const router = useRouter()
+
+    const axiosInstance = useAxios()
 
     async function handleSubmit(e:FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -12,28 +19,27 @@ export default function Login() {
             login,
             password
         }
-
-        const response: Response = await fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-              },
-            body: JSON.stringify(bodyData)
-        })
-
-        const token = await response.json()
-
-        console.log(token)
+        try {
+          const response = await axiosInstance.post('auth/login', bodyData)
+          if(response.status > 300) return setError('Something went wrong')
+          return router.push('/comments/main')
+          
+        } catch (error) {
+          console.log(error)
+          return setError('Something went wrong...')
+        }
+        
     }
 
     return (
       <div>
         <form onSubmit={handleSubmit} className="grid min-h-screen gap-6 place-content-center">
-            <input ref={loginRef} className="outline outline-gray-900 rounded-full p-4" type="text" placeholder="login"/>
-            <input ref={passwordRef} className="outline outline-gray-900 rounded-full p-4" type="password" placeholder="password"/>
+            <input required={true} minLength={6} ref={loginRef} className="outline outline-gray-900 rounded-full p-4" type="text" placeholder="login"/>
+            <input required={true} minLength={6} ref={passwordRef} className="outline outline-gray-900 rounded-full p-4" type="password" placeholder="password"/>
+            {error && <p className="text-red-500">{error}</p>}
             <button>Login</button>
         </form>
+        <Link href='/login/profile'>Get Profile</Link>
       </div>
     )
   }

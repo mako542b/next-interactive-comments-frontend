@@ -1,58 +1,22 @@
 import CommentModule from "./CommentModule"
 import { commentInterface } from "./interfaces/commentInterface"
 
-const Comments = () => {
+interface propsInterface {
+    comments: commentInterface[];
+    getComments? :() => void;
+}
+const Comments = ({comments, getComments} : propsInterface) => {
 
-    const response: commentInterface = {
-        id: '2',
-        img: '/image-amyrobson.png',
-        author: 'Amy Robson',
-        updated: 'just now',
-        content: "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
-        score: 0,
-        parentId: '1',
-        responses: null
+    const originalComments = comments.filter(comment => comment.parentId === null)
+
+    const responses = (id: string) => {
+        return comments.filter(comment => comment.parentId === id).sort((a,b) => a.createdOn < b.createdOn ? -1 : 1)
     }
-
-    
-    const secondResponse: commentInterface = {
-        id: '3',
-        img: '/image-amyrobson.png',
-        author: 'Amy Robson',
-        updated: 'just now',
-        content: "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
-        score: 0,
-        parentId: '1',
-        responses: null
-    }
-
-    const comment: commentInterface[] = [{
-        id: '1',
-        img: 'image-amyrobson.png',
-        author: 'Amy Robson',
-        updated: 'just now',
-        content: "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
-        score: 0,
-        parentId: null,
-        responses: [response, secondResponse]
-    },
-    {
-        id: '4',
-        img: 'image-amyrobson.png',
-        author: 'Amy Robson',
-        updated: 'just now',
-        content: "Impressive! Though it seems the drag feature could be improved. But overall it looks incredible. You've nailed the design and the responsiveness at various breakpoints works really well.",
-        score: 0,
-        parentId: null,
-        responses: [response, secondResponse]
-    }]
-
-    
 
     return (
-        <div className="w-[min(90%,40em)] mx-auto flex flex-col gap-5">
-            {comment && comment.map(comm => (
-                <CommentModule key={comm.id} comment={comm}/>
+        <div className="w-[min(90%,40em)] mx-auto flex flex-col gap-8">
+            {originalComments && originalComments.map(comm => (
+                <CommentModule key={comm._id} comment={comm} responses={responses(comm._id)} getComments={getComments}/>
             ))}
         </div>
     )
