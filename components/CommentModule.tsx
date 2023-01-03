@@ -11,7 +11,7 @@ interface props {
 
 const CommentModule = ({comment, responses, getComments} : props) => {
 
-    const [hidden, setHidden] = useState<boolean>(false)
+    const [hidden, setHidden] = useState<boolean>(true)
 
     const buttonLabel = `${hidden ? 'show' : 'hide'} ${responses.length} ${responses.length === 1 ? 'reply' : 'replies'}`
     

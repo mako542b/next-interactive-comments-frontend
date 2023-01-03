@@ -44,16 +44,15 @@ const useAxios = () => {
                                 'Authorization' : `Bearer ${refreshToken.data.access_token}`,
                             },
                         })
-                        console.log(user)
                         if(context?.setUser) context.setUser(user.data)
-
+                        prevReq.headers.Authorization = `Bearer ${refreshToken.data.access_token}`
                         return axiosInstance(prevReq);
                         
                     } catch (error) {
-                        return
+                        return Promise.reject(error)
                     }
                 }
-                return
+                return Promise.reject(error)
             }
         )
        return () => {
