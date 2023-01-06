@@ -11,7 +11,7 @@ export interface ratingInterface {
 }
 
 export interface commentInterface {
-    user: UserInterface,
+    user: UserInterface | null,
     _id: string,
     createdOn: string,
     content: string,

@@ -1,5 +1,6 @@
 import { FormEvent, useRef, useState } from "react"
 import { useRouter } from "next/router"
+import useAxios from "../../hooks/useAxios"
 
 const Register = () => {
 
@@ -8,6 +9,7 @@ const Register = () => {
     const confirmPasswordRef = useRef<HTMLInputElement>(null)
     const [avatarUrl, setAvatar] = useState<string>('spikedball.png')
     const [error, setError] = useState<string | null>(null)
+    const axiosInstance = useAxios()
     const router = useRouter()
 
 
@@ -21,17 +23,9 @@ const Register = () => {
         const password = passwordRef.current?.value
         const bodyData = {login, password, avatar:avatarUrl}
         try {
-            const response = await fetch('http://localhost:3000/login/register',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                  },
-                body: JSON.stringify(bodyData)
-            })
-            const resp = await response.json()
-            console.log(response.status)
-            if(!response.ok) return setError('Try different login!!')
+            const response = await axiosInstance.post('login/register', bodyData)
+            console.log(response)
+            if(response.statusText !== 'Created') return setError('Try different login!!')
             return router.push('/')
         } catch (error) {
             console.log(error)
