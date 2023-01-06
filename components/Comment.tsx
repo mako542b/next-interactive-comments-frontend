@@ -26,7 +26,7 @@ const Comment = ({comment, parentId, getComments}: props) => {
                 {isEditing ? (
                     <EditForm getComments={getComments} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
                 ) : (
-                    <div>
+                    <>
                         <CommentMetadata comment={comment}/>
                         <div className="comment-content | text-[#67727e] font-light row-start-2 col-start-1 col-end-3"><p>{comment.replyingTo && <span className="text-teal-700">@{comment.replyingTo} </span>}{comment.content}</p></div>
                         <RatingComponent
@@ -42,7 +42,7 @@ const Comment = ({comment, parentId, getComments}: props) => {
                             setIsEditing={setIsEditing}
                             getComments={getComments}    
                         />
-                    </div>
+                    </>
                 )}
             </div>
             {isReplying && comment?.user && <Form replyingTo={comment?.user?.login} parentId={parentId} getComments={getComments} setIsReplying={setIsReplying}/>}
