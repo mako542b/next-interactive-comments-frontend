@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect } from "react";
-// import useAuthContext from "./useAuthContext";
 import { useContext } from "react";
 import { TokenContext } from "../components/TokenProvider";
 
@@ -16,18 +15,13 @@ const useAxios = () => {
     })
     const axiosNormal = axios.create({
         baseURL: 'http://localhost:3500',
-        headers: { 
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         withCredentials: true
     })
-
-
 
     axiosInstance.defaults.headers.Authorization = `Bearer ${context?.JTW}`
 
     useEffect(() => {
-
         const responseInterceptor = axiosInstance.interceptors.response.use(
             response => response,
             async (error) => {
@@ -36,7 +30,7 @@ const useAxios = () => {
                     prevReq.sent = true
                     try {
                         const refreshToken = await axiosNormal.get('auth/refresh')
-                        if (setJWT) setJWT(refreshToken.data.access_token)
+                        setJWT?.(refreshToken.data.access_token)
 
                         const user = await axiosNormal.get('auth/profile',{
                             headers: { 
@@ -44,7 +38,7 @@ const useAxios = () => {
                                 'Authorization' : `Bearer ${refreshToken.data.access_token}`,
                             },
                         })
-                        if(context?.setUser) context.setUser(user.data)
+                        context?.setUser(user.data)
                         prevReq.headers.Authorization = `Bearer ${refreshToken.data.access_token}`
                         return axiosInstance(prevReq);
                         

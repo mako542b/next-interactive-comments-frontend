@@ -15,20 +15,19 @@ export default <T>(url: any, refetch: boolean) => {
             try {
                 setIsLoading(true)
                 setError(false)
-                console.log('url  =  ' + url)
                 const response = await axiosInstance.get(`comments/${url}`, {signal})
                 setComments(response?.data)
                 setIsLoading(false)
                 return
             } catch (error: any) {
-              setIsLoading(false)
-              if(error?.name !== 'CanceledError') {
-                  setError(true)
-                  console.log(error)
+                setIsLoading(false)
+                if(error?.name !== 'CanceledError') {
+                    setError(true)
+                    console.log(error)
                 }
                 return 
             }
-          }
+        }
         get()
         return () => abortController.abort()
     }, [refetch, url])
