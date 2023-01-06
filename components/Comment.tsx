@@ -6,7 +6,7 @@ import { useContext } from "react"
 import { TokenContext } from "./TokenProvider"
 import useApiFunctions from "../controllers/useApiFunctions"
 import RatingComponent from './RatingComponent'
-
+import CommentMetadata from "./CommentMetadata"
 
 interface props {
     comment: commentInterface;
@@ -41,13 +41,7 @@ const Comment = ({comment, parentId, getComments}: props) => {
                     <EditForm getComments={getComments} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
                 ) : (
                     <>
-                        <div className="comment-metadata | flex gap-3 place-items-center row-start-1">
-                            <div className="max-h-10 aspect-square">
-                                <img src={`/avatars/${comment?.user?.avatar}`} alt="" />
-                            </div>
-                            <p className="text-[#324152]">{comment?.user ? comment?.user?.login : 'user deleted'}</p>
-                            <p className="text-[#67727e]">{comment.createdOn}</p>
-                        </div>
+                        <CommentMetadata comment={comment}/>
                         <div className="comment-content | text-[#67727e] font-light row-start-2 col-start-1 col-end-3"><p>{comment.replyingTo && <span className="text-teal-700">@{comment.replyingTo} </span>}{comment.content}</p></div>
                         
                         <RatingComponent

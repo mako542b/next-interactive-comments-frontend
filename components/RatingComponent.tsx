@@ -14,7 +14,6 @@ const RatingComponent: FunctionComponent<Props> = ({ comment, user, getComments 
 
     const { handleRatingApi } = useApiFunctions()
 
-
     return (
         <div className="comment-score | bg-[#f5f6fa] flex items-center w-fit row-start-3">
             <button onClick={() => handleRating('downvote')} className='px-3 py-4 group'>
