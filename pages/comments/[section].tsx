@@ -10,7 +10,7 @@ import useGetComments from "../../hooks/useGetComments"
 const Section = () => {
 
     const router = useRouter()
-    let { section } = router.query
+    const { section } = router.query
     const context = useContext(TokenContext)
     const user = context?.user
     const [refetch, setRefetch] = useState<boolean>(false)
