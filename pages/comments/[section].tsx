@@ -17,6 +17,7 @@ const Section = () => {
     const { comments, isLoading, error } = useGetComments<commentInterface[] | null>(section, refetch)
     const getComments = () => setRefetch(prev => !prev)
     const sortedComments = comments?.sort((a,b) => a.createdOn > b.createdOn ? -1 : 1)
+    
 
     return (
         <div className="bg-[#f5f6fa] min-h-screen flex flex-col gap-6 py-10">

@@ -57,7 +57,7 @@ const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
     }
 
     function createMessage() {
-        const content = textArea?.current?.value
+        const content = trimReplyingTo(textArea?.current?.value as string)
         if(content?.trim() === '') return setError('Comment cannot be empty')
         const messageDto = {
             user: user?._id,
@@ -68,6 +68,13 @@ const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
             replyingTo,
         }
         return messageDto
+    }
+
+    function trimReplyingTo(text: string) {
+        if(!replyingTo) return text
+        const regex = new RegExp(`@${replyingTo}`,'ig')
+        if(!regex.test(text)) return text
+        return text.replace(regex,'')
     }
 }
 

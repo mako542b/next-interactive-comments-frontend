@@ -22,29 +22,27 @@ const Comment = ({comment, parentId, getComments}: props) => {
 
     return (
         <div className="flex flex-col gap-5">
-            <div className="p-4 bg-white w-full rounded-md grid gap-y-4">
-                {isEditing ? (
-                    <EditForm getComments={getComments} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
-                ) : (
-                    <>
-                        <CommentMetadata comment={comment}/>
-                        <div className="comment-content | text-[#67727e] font-light row-start-2 col-start-1 col-end-3"><p>{comment.replyingTo && <span className="text-teal-700">@{comment.replyingTo} </span>}{comment.content}</p></div>
-                        <RatingComponent
-                            comment={comment}
-                            user={user}
-                            getComments={getComments}
-                        />
-                        <ActionButtons 
-                            commentUserId={comment.user?._id}
-                            commentId={comment._id}
-                            user={user} 
-                            setIsReplying={setIsReplying} 
-                            setIsEditing={setIsEditing}
-                            getComments={getComments}    
-                        />
-                    </>
-                )}
-            </div>
+            {isEditing ? (
+                <EditForm getComments={getComments} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
+            ) : (
+                <div className="p-4 bg-white w-full rounded-md grid gap-y-4">
+                    <CommentMetadata comment={comment}/>
+                    <div className="comment-content | text-[#67727e] font-light row-start-2 col-start-1 col-end-3"><p>{comment.replyingTo && <span className="text-teal-700">@{comment.replyingTo} </span>}{comment.content}</p></div>
+                    <RatingComponent
+                        comment={comment}
+                        user={user}
+                        getComments={getComments}
+                    />
+                    <ActionButtons 
+                        commentUserId={comment.user?._id}
+                        commentId={comment._id}
+                        user={user} 
+                        setIsReplying={setIsReplying} 
+                        setIsEditing={setIsEditing}
+                        getComments={getComments}    
+                    />
+                </div>
+            )}
             {isReplying && comment?.user && <Form replyingTo={comment?.user?.login} parentId={parentId} getComments={getComments} setIsReplying={setIsReplying}/>}
         </div>
     )

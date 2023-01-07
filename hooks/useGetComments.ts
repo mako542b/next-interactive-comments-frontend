@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useAxios from "./useAxios";
 
@@ -6,6 +7,8 @@ export default <T>(url: any, refetch: boolean) => {
     const [comments, setComments] = useState<T>()
     const [error, setError] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const router = useRouter()
+
 
     useEffect(() => {
         if(!url) return
@@ -23,6 +26,10 @@ export default <T>(url: any, refetch: boolean) => {
                 return
             } catch (error: any) {
                 setIsLoading(false)
+                console.log(error)
+                if(error?.response?.status === 401 || error?.response?.status === 403) {
+                    router.push('/login')
+                }
                 if(error?.name !== 'CanceledError') {
                     setError(true)
                 }
