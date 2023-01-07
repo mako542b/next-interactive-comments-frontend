@@ -1,18 +1,22 @@
 import axios from "axios";
-import { useEffect } from "react";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { TokenContext } from "../components/TokenProvider";
 
 const useAxios = () => {
 
+
     const context = useContext(TokenContext)
     const setJWT = context?.setJWT
     
-    const axiosInstance = axios.create({
-        baseURL: 'http://localhost:3500',
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-    })
+    const {current: axiosInstance} = useRef(
+        axios.create({
+            baseURL: 'http://localhost:3500',
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        })
+    )
+
+
     const axiosNormal = axios.create({
         baseURL: 'http://localhost:3500',
         headers: { 'Content-Type': 'application/json' },
@@ -38,7 +42,7 @@ const useAxios = () => {
                                 'Authorization' : `Bearer ${refreshToken.data.access_token}`,
                             },
                         })
-                        context?.setUser(user.data)
+                        context?.setUser?.(user?.data)
                         prevReq.headers.Authorization = `Bearer ${refreshToken.data.access_token}`
                         return axiosInstance(prevReq);
                         
@@ -50,10 +54,9 @@ const useAxios = () => {
             }
         )
        return () => {
-        axiosInstance.interceptors.response.eject(responseInterceptor) 
-        // axiosInstance.interceptors.response.eject(requestInterceptor) 
+        axiosInstance.interceptors.response.eject(responseInterceptor)
         }
-    },[])
+    },[axiosInstance])
 
     return axiosInstance
 }

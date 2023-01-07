@@ -15,7 +15,7 @@ const EditForm = ({setIsEditing, prevContent, commentId, getComments}: props) =>
 
      return (
         <form className="bg-white min-h-[10rem]" onSubmit={handleEdit}>
-            <textarea className="resize-y h-[90%] w-full outline outline-1 outline-gray-700 rounded-lg p-3" name="comment" placeholder="Add a comment...">
+            <textarea ref={editingContent} className="resize-y h-[90%] w-full outline outline-1 outline-gray-700 rounded-lg p-3" name="comment" placeholder="Add a comment...">
                 {prevContent}
             </textarea>
             <button className="bg-teal-300 px-6 py-2 rounded-md">Edit</button>
