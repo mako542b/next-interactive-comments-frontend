@@ -11,7 +11,7 @@ import ActionButtons from './ActionButtons'
 interface props {
     comment: commentInterface;
     parentId?: string;
-    getComments? :() => void;
+    getComments? : () => void;
 }
 
 const Comment = ({comment, parentId, getComments}: props) => {

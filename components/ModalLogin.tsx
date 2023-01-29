@@ -1,8 +1,11 @@
-export default function ModalLogin () {
+import LoginForm from "./LoginForm"
+
+
+export default function ModalLogin ({setModal}: any) {
 
     return (
-        <div className="w-screen h-screen bg-red-500">
-            Login
+        <div className="fixed grid inset-1/4 place-content-center bg-blue-400">
+            <LoginForm setModal={setModal}/>
         </div>
     )
 }

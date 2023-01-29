@@ -6,6 +6,7 @@ import { useContext, useState } from "react"
 import Link from "next/link"
 import { commentInterface } from "../../components/interfaces/commentInterface"
 import useGetComments from "../../hooks/useGetComments"
+import ModalLogin from "../../components/ModalLogin"
 
 const Section = () => {
 
@@ -14,9 +15,14 @@ const Section = () => {
     const context = useContext(TokenContext)
     const user = context?.user
     const [refetch, setRefetch] = useState<boolean>(false)
-    const { comments, isLoading, error } = useGetComments<commentInterface[] | null>(section, refetch)
+    const { comments, isLoading, error, modal, setModal } = useGetComments<commentInterface[] | null>(section, refetch)
     const getComments = () => setRefetch(prev => !prev)
     const sortedComments = comments?.sort((a,b) => a.createdOn > b.createdOn ? -1 : 1)
+
+    function refreshLogin() {
+        setModal(false) 
+        getComments()
+    }
     
 
     return (
@@ -30,6 +36,7 @@ const Section = () => {
             {sortedComments && sortedComments.length > 0 &&  <Comments comments={sortedComments} getComments={getComments}/>}
             {isLoading && <p>Loading spinner</p>}
             {error && <p>error</p>}
+            {modal && <ModalLogin setModal={refreshLogin}/>}
         </div>
     )
 }

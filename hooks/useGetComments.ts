@@ -7,6 +7,7 @@ export default <T>(url: any, refetch: boolean) => {
     const [comments, setComments] = useState<T>()
     const [error, setError] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [modal, setModal] = useState<boolean>(false)
     const router = useRouter()
 
 
@@ -20,26 +21,27 @@ export default <T>(url: any, refetch: boolean) => {
             try {
                 setIsLoading(true)
                 setError(false)
+                setModal(false)
                 const response = await axiosInstance.get(`comments/${url}`, {signal})
                 setComments(response?.data)
                 setIsLoading(false)
                 return
             } catch (error: any) {
                 setIsLoading(false)
-                console.log(error)
                 if(error?.response?.status === 401 || error?.response?.status === 403) {
-                    router.push('/login')
+                    // router.push('/login')
+                    setModal(true)
                 }
-                if(error?.name !== 'CanceledError') {
+                else if(error?.name !== 'CanceledError') {
                     setError(true)
                 }
-                return 
+                else return 
             }
         }
         get()
         return () => abortController.abort()
     }, [url, refetch])
 
-    return { comments, error, isLoading }
+    return { comments, error, isLoading, modal, setModal}
 
 }
