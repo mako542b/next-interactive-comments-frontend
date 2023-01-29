@@ -10,7 +10,7 @@ interface props {
 
 const EditForm = ({setIsEditing, prevContent, commentId, getComments}: props) => {
 
-    const { editCommentApi } = useApiFunctions()
+    const apiFunctions = useApiFunctions()
     const editingContent = useRef<HTMLTextAreaElement>(null)
 
      return (
@@ -27,7 +27,7 @@ const EditForm = ({setIsEditing, prevContent, commentId, getComments}: props) =>
         e.preventDefault()
         try {
             const newContent = editingContent.current?.value as string
-            const editedComment = await editCommentApi(commentId as string, newContent)
+            const editedComment = await apiFunctions.editCommentApi(commentId as string, newContent)
             getComments?.()
             setIsEditing(false)
             return editedComment

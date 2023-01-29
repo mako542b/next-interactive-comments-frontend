@@ -6,7 +6,7 @@ import { useContext, useState } from "react"
 import Link from "next/link"
 import { commentInterface } from "../../components/interfaces/commentInterface"
 import useGetComments from "../../hooks/useGetComments"
-import ModalLogin from "../../components/ModalLogin"
+import LoginForm from "../../components/LoginForm"
 
 const Section = () => {
 
@@ -16,9 +16,13 @@ const Section = () => {
     const user = context?.user
     const [refetch, setRefetch] = useState<boolean>(false)
     const { comments, isLoading, error, modal, setModal } = useGetComments<commentInterface[] | null>(section, refetch)
-    const getComments = () => setRefetch(prev => !prev)
     const sortedComments = comments?.sort((a,b) => a.createdOn > b.createdOn ? -1 : 1)
-
+    
+    const getComments = () => {
+        console.log('getComments')
+        return setRefetch(prev => !prev)
+    }
+    
     function refreshLogin() {
         setModal(false) 
         getComments()
@@ -34,9 +38,15 @@ const Section = () => {
                 {user ? <Form section={section} getComments={getComments}/> : <div><p>Login to add comments</p><Link href='/login'>Login here</Link></div>}
             </div>
             {sortedComments && sortedComments.length > 0 &&  <Comments comments={sortedComments} getComments={getComments}/>}
-            {isLoading && <p>Loading spinner</p>}
+            {/* {isLoading && <p className="fixed top-[50%] left-[50%]">Loading spinner</p>} */}
             {error && <p>error</p>}
-            {modal && <ModalLogin setModal={refreshLogin}/>}
+            {modal && (
+                <div className="fixed inset-y-[10%] inset-x-1/4 grid content-center bg-teal-200">
+                    <button className="z-50 absolute right-4 top-2" onClick={() => setModal(false)}>X</button>
+                    <LoginForm setModal={refreshLogin}/>
+                    <p className="p-6">Your session expired</p>
+                </div>
+            )}
         </div>
     )
 }

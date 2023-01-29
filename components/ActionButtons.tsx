@@ -21,7 +21,7 @@ const ActionButtons = ({
     commentId
 }: props) => {
 
-    const { deleteCommentApi } = useApiFunctions()
+    const apiFunctions = useApiFunctions()
     const isOp = user?._id === commentUserId
 
     return (
@@ -35,7 +35,7 @@ const ActionButtons = ({
     async function handleDelete(){
         if(!window.confirm('Are you sure you want to delete comment?')) return
         try {
-            const deletedComment = await deleteCommentApi(commentId)
+            const deletedComment = await apiFunctions.deleteCommentApi(commentId)
             getComments?.()
             return deletedComment
         } catch (error) {

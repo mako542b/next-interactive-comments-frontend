@@ -1,39 +1,44 @@
 import { MessageBody } from "../components/interfaces/MessageBody";
 import { ratingInterface } from '../components/interfaces/commentInterface'
-import useAxios from "../hooks/useAxios";
+import useAxios from "../hooks/useAxios"
+import {AxiosInstance} from "axios";
 
 
-const useApiFunctions = () => {
-    const axiosInstance = useAxios()
+class ApiFunctions  {
 
-    async function createComment(body: MessageBody) {
-        const response = await axiosInstance.post('comments/create', body)
+    constructor(private axiosInstance: AxiosInstance) {}
+
+    async createComment(body: MessageBody) {
+        const response = await this.axiosInstance.post('comments/create', body)
         return response.data
     }
 
-    async function handleRatingApi(commentId: string, rating: ratingInterface) {
+    async handleRatingApi(commentId: string, rating: ratingInterface) {
         const body = {
             commentId,
             rating
           }
-        const response = await axiosInstance.patch('comments/rating', body )
+        const response = await this.axiosInstance.patch('comments/rating', body )
         return response.data
     }
 
     
-    async function deleteCommentApi(id:string) {
-        const comment = await axiosInstance.delete(`comments/${id}`)
+    async deleteCommentApi(id:string) {
+        const comment = await this.axiosInstance.delete(`comments/${id}`)
         return comment.data
     }
     
-    async function editCommentApi(id: string, newContent: string) {
-        const editedComment = await axiosInstance.patch(`comments/${id}`, {newContent})
+    async editCommentApi(id: string, newContent: string) {
+        const editedComment = await this.axiosInstance.patch(`comments/${id}`, {newContent})
         return editedComment.data
     }
-
-    return {createComment, handleRatingApi, deleteCommentApi, editCommentApi}
-
 }
 
-export default useApiFunctions
+// export default ApiFunctions
+
+export default function useApiFunctions() {
+    const axiosInstance = useAxios()
+    const apiFunctions = new ApiFunctions(axiosInstance)
+    return apiFunctions
+}
 

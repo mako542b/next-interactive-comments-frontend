@@ -12,7 +12,7 @@ interface Props {
 
 const RatingComponent: FunctionComponent<Props> = ({ comment, user, getComments }) => {
 
-    const { handleRatingApi } = useApiFunctions()
+    const apiFunctions = useApiFunctions()
 
     return (
         <div className="comment-score | bg-[#f5f6fa] flex items-center w-fit row-start-3">
@@ -31,7 +31,7 @@ const RatingComponent: FunctionComponent<Props> = ({ comment, user, getComments 
     async function handleRating(rate: 'upvote' | 'downvote') {
         if(!user) return window.alert('Sign in to rate comments')
         try {
-            const response = await handleRatingApi(comment._id, {
+            const response = await apiFunctions.handleRatingApi(comment._id, {
                     ratingUserId: user?._id as string,
                     rate
             })

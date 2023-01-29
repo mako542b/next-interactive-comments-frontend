@@ -3,6 +3,7 @@ import { TokenContext } from "./TokenProvider"
 import { useContext } from "react"
 import { useRouter } from "next/router"
 import useApiFunctions from '../controllers/useApiFunctions'
+import useAxios from "../hooks/useAxios"
 
 
 interface props {
@@ -16,10 +17,12 @@ interface props {
 const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
 
     const [error, setError] = useState<string | null>(null)
-    const { createComment } = useApiFunctions()
     const { section } = useRouter().query
     const textArea = useRef<HTMLTextAreaElement>(null)
     const user = useContext(TokenContext)?.user
+
+    const axiosInstance = useAxios()
+    const apiFunctions = useApiFunctions()
 
      return (
         <div>
@@ -46,7 +49,7 @@ const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
         const messageDto = createMessage()
         if(!messageDto) return
         try {
-            const response = createComment(messageDto)
+            const response = await apiFunctions.createComment(messageDto)
             if(textArea?.current) textArea.current.value = ''
             getComments?.()
             setIsReplying?.(false)
@@ -72,7 +75,7 @@ const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
 
     function trimReplyingTo(text: string) {
         if(!replyingTo) return text
-        const regex = new RegExp(`@${replyingTo}`,'ig')
+        const regex = new RegExp(`@${replyingTo}`,'i')
         if(!regex.test(text)) return text
         return text.replace(regex,'')
     }
