@@ -1,29 +1,14 @@
-import axios from "axios";
-import { useContext, useEffect, useRef } from "react";
+import { axiosInstance } from "../api/axios";
+import { useContext, useEffect } from "react";
 import { TokenContext } from "../components/TokenProvider";
+import useRefreshToken from "./useRefreshToken";
 
 const useAxios = () => {
-
-
-    const context = useContext(TokenContext)
-    const setJWT = context?.setJWT
     
-    const {current: axiosInstance} = useRef(
-        axios.create({
-            baseURL: 'http://localhost:3500',
-            headers: { 'Content-Type': 'application/json' },
-            withCredentials: true
-        })
-    )
-
-
-    const axiosNormal = axios.create({
-        baseURL: 'http://localhost:3500',
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
-    })
-
+    const context = useContext(TokenContext)
     axiosInstance.defaults.headers.Authorization = `Bearer ${context?.JTW}`
+
+    const refresh = useRefreshToken()
 
     useEffect(() => {
         const responseInterceptor = axiosInstance.interceptors.response.use(
@@ -32,23 +17,9 @@ const useAxios = () => {
                 const prevReq = error?.config
                 if(!prevReq.sent) {
                     prevReq.sent = true
-                    try {
-                        const refreshToken = await axiosNormal.get('auth/refresh')
-                        setJWT?.(refreshToken.data.access_token)
-
-                        const user = await axiosNormal.get('auth/profile',{
-                            headers: { 
-                                'Content-Type': 'application/json',
-                                'Authorization' : `Bearer ${refreshToken.data.access_token}`,
-                            },
-                        })
-                        context?.setUser?.(user?.data)
-                        prevReq.headers.Authorization = `Bearer ${refreshToken.data.access_token}`
-                        return axiosInstance(prevReq);
-                        
-                    } catch (error) {
-                        return Promise.reject(error)
-                    }
+                    const refreshToken = await refresh()
+                    prevReq.headers.Authorization = `Bearer ${refreshToken}`
+                    return axiosInstance(prevReq);
                 }
                 return Promise.reject(error)
             }
