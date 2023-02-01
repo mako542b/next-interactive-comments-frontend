@@ -24,7 +24,6 @@ const Register = () => {
         const bodyData = {login, password, avatar:avatarUrl}
         try {
             const response = await axiosInstance.post('login/register', bodyData)
-            console.log(response)
             if(response.statusText !== 'Created') return setError('Try different login!!')
             return router.push('/')
         } catch (error) {

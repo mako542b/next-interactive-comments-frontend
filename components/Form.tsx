@@ -10,19 +10,17 @@ interface props {
     section?: string | string[] | undefined;
     replyingTo?: string;
     parentId? :string;
-    getComments? :() => void;
     setIsReplying?: Dispatch<SetStateAction<boolean>>;
-    setModal?: Dispatch<SetStateAction<boolean>>;
 }
 
-const Form = ({ replyingTo, parentId, getComments, setIsReplying, setModal }: props) => {
+const Form = ({ replyingTo, parentId, setIsReplying }: props) => {
 
     const [error, setError] = useState<string | null>(null)
     const { section } = useRouter().query
     const textArea = useRef<HTMLTextAreaElement>(null)
     const user = useContext(TokenContext)?.user
 
-    const apiFunctions = useApiFunctions()
+    const { createComment } = useApiFunctions()
 
      return (
         <div>
@@ -49,8 +47,7 @@ const Form = ({ replyingTo, parentId, getComments, setIsReplying, setModal }: pr
         const content = textArea?.current?.value as string
         if(content?.trim() === '') return setError('Comment cannot be empty')
         const messageDto = createMessage(content, user?._id as string, section as string, parentId, replyingTo)
-        const response = await apiFunctions.createComment(messageDto)
-        if(response && response.error === 'timeout') setModal?.(true)
+        const response = await createComment(messageDto)
         if(!response) return setError('Something went wrong')
         resetForm()
         return response
@@ -58,11 +55,10 @@ const Form = ({ replyingTo, parentId, getComments, setIsReplying, setModal }: pr
     
     function resetForm() {
         if(textArea?.current) textArea.current.value = ''
-        getComments?.()
         setIsReplying?.(false)
     }
 
-    
+
 
 }
 

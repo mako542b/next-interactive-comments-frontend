@@ -2,7 +2,7 @@ import { FormEvent, useRef, useState } from "react";
 import {useRouter} from "next/router";
 import useAxios from "../hooks/useAxios";
 
-export default function LoginForm({setModal} : any) {
+export default function LoginForm({ setModal }: any) {
     const loginRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
     const [error, setError] = useState<string | null>(null)
@@ -22,11 +22,10 @@ export default function LoginForm({setModal} : any) {
           const response = await axiosInstance.post('auth/login', bodyData)
           if(response.status > 300) return setError('Something went wrong')
           setModal?.(false)
-          if(!setModal) return router.push('/comments/main')
+          if(router.pathname === '/login') return router.push('/comments/main')
           return 
           
         } catch (error) {
-          console.log(error)
           return setError('Something went wrong...')
         }
         

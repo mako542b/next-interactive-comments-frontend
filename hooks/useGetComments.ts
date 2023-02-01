@@ -1,15 +1,21 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import useAxios from "./useAxios";
+import { useContext } from "react";
+import { TokenContext } from "../components/TokenProvider";
 
-export default <T>(url: any, refetch: boolean) => {
+export default <T>(url: any) => {
     const axiosInstance = useAxios()
     const [comments, setComments] = useState<T>()
     const [error, setError] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [modal, setModal] = useState<boolean>(false)
-    const router = useRouter()
+    const context = useContext(TokenContext)
 
+    const modal = context?.modal as boolean
+    const setModal = context?.setModal as Dispatch<SetStateAction<boolean>>
+    
+    const setRefetch = context?.setRefetch as Dispatch<SetStateAction<boolean>>
+    const refetch = context?.refetch as boolean
 
     useEffect(() => {
         if(!url) return
@@ -42,6 +48,6 @@ export default <T>(url: any, refetch: boolean) => {
     }, [url, refetch])
 
 
-    return { comments, error, isLoading, modal, setModal}
+    return { comments, error, isLoading, modal, setModal, refetch, setRefetch }
 
 }

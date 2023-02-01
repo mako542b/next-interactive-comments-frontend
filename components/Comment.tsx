@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import {  useState } from "react"
 import { commentInterface } from "./interfaces/commentInterface"
 import EditForm from "./EditForm"
 import Form from "./Form"
@@ -12,12 +12,9 @@ import ActionButtons from './ActionButtons'
 interface props {
     comment: commentInterface;
     parentId?: string;
-    getComments? : () => void;
-    setModal: Dispatch<SetStateAction<boolean>>;
-
 }
 
-const Comment = ({ comment, parentId, getComments, setModal }: props) => {
+const Comment = ({ comment, parentId }: props) => {
 
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const [isReplying, setIsReplying] = useState<boolean>(false)
@@ -26,7 +23,7 @@ const Comment = ({ comment, parentId, getComments, setModal }: props) => {
     return (
         <div className="flex flex-col gap-5">
             {isEditing ? (
-                <EditForm getComments={getComments} setModal={setModal} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
+                <EditForm setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
             ) : (
                 <div className="p-4 bg-white w-full rounded-md grid gap-y-4">
                     <CommentMetadata comment={comment}/>
@@ -34,7 +31,6 @@ const Comment = ({ comment, parentId, getComments, setModal }: props) => {
                     <RatingComponent
                         comment={comment}
                         user={user}
-                        getComments={getComments}
                     />
                     <ActionButtons 
                         commentUserId={comment.user?._id}
@@ -42,12 +38,10 @@ const Comment = ({ comment, parentId, getComments, setModal }: props) => {
                         user={user} 
                         setIsReplying={setIsReplying} 
                         setIsEditing={setIsEditing}
-                        getComments={getComments}
-                        setModal={setModal} 
                     />
                 </div>
             )}
-            {isReplying && comment?.user && <Form replyingTo={comment?.user?.login} parentId={parentId} getComments={getComments} setIsReplying={setIsReplying}/>}
+            {isReplying && comment?.user && <Form replyingTo={comment?.user?.login} parentId={parentId} setIsReplying={setIsReplying}/>}
         </div>
     )
 }

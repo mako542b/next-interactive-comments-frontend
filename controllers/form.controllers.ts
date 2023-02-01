@@ -1,5 +1,3 @@
-
-
 export function createMessage(
     content: string, 
     userId: string, 

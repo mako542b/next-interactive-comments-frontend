@@ -7,12 +7,11 @@ import useApiFunctions from "../controllers/useApiFunctions"
 interface Props {
     comment: commentInterface;
     user: any;
-    getComments?: () => void
 }
 
-const RatingComponent: FunctionComponent<Props> = ({ comment, user, getComments }) => {
+const RatingComponent: FunctionComponent<Props> = ({ comment, user }) => {
 
-    const apiFunctions = useApiFunctions()
+    const { handleRatingApi } = useApiFunctions()
 
     return (
         <div className="comment-score | bg-[#f5f6fa] flex items-center w-fit row-start-3">
@@ -30,16 +29,11 @@ const RatingComponent: FunctionComponent<Props> = ({ comment, user, getComments 
     // Sends api call to modify db
     async function handleRating(rate: 'upvote' | 'downvote') {
         if(!user) return window.alert('Sign in to rate comments')
-        try {
-            const response = await apiFunctions.handleRatingApi(comment._id, {
+            const response = await handleRatingApi(comment._id, {
                     ratingUserId: user?._id as string,
                     rate
             })
-            getComments?.()
             return response
-        } catch (error) {
-            return false
-        }
     }
 
     // Counts the score of the comment
