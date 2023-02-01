@@ -8,6 +8,7 @@ interface props {
     commentId: string;
     setIsEditing: Dispatch<SetStateAction<boolean>>;
     setIsReplying: Dispatch<SetStateAction<boolean>>;
+    setModal: Dispatch<SetStateAction<boolean>>;
     getComments?: () => void;
 }
 
@@ -18,7 +19,8 @@ const ActionButtons = ({
     setIsEditing, 
     setIsReplying, 
     getComments,
-    commentId
+    commentId,
+    setModal
 }: props) => {
 
     const apiFunctions = useApiFunctions()
@@ -33,14 +35,11 @@ const ActionButtons = ({
     )
 
     async function handleDelete(){
-        if(!window.confirm('Are you sure you want to delete comment?')) return
-        try {
-            const deletedComment = await apiFunctions.deleteCommentApi(commentId)
+        if(!window.confirm('Are you sure you want to delete comment?') ) return
+            const response = await apiFunctions.deleteCommentApi(commentId)
+            if(response?.error === 'timeout') setModal(true)
             getComments?.()
-            return deletedComment
-        } catch (error) {
-            return
-        }
+            return response
     }
 }
 

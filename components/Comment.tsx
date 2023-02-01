@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { commentInterface } from "./interfaces/commentInterface"
 import EditForm from "./EditForm"
 import Form from "./Form"
@@ -8,13 +8,16 @@ import RatingComponent from './RatingComponent'
 import CommentMetadata from "./CommentMetadata"
 import ActionButtons from './ActionButtons'
 
+
 interface props {
     comment: commentInterface;
     parentId?: string;
     getComments? : () => void;
+    setModal: Dispatch<SetStateAction<boolean>>;
+
 }
 
-const Comment = ({comment, parentId, getComments}: props) => {
+const Comment = ({ comment, parentId, getComments, setModal }: props) => {
 
     const [isEditing, setIsEditing] = useState<boolean>(false)
     const [isReplying, setIsReplying] = useState<boolean>(false)
@@ -23,7 +26,7 @@ const Comment = ({comment, parentId, getComments}: props) => {
     return (
         <div className="flex flex-col gap-5">
             {isEditing ? (
-                <EditForm getComments={getComments} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
+                <EditForm getComments={getComments} setModal={setModal} setIsEditing={setIsEditing} prevContent={comment.content} commentId={comment._id}/>
             ) : (
                 <div className="p-4 bg-white w-full rounded-md grid gap-y-4">
                     <CommentMetadata comment={comment}/>
@@ -39,7 +42,8 @@ const Comment = ({comment, parentId, getComments}: props) => {
                         user={user} 
                         setIsReplying={setIsReplying} 
                         setIsEditing={setIsEditing}
-                        getComments={getComments}    
+                        getComments={getComments}
+                        setModal={setModal} 
                     />
                 </div>
             )}

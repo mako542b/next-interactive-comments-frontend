@@ -19,7 +19,6 @@ const Section = () => {
     const sortedComments = comments?.sort((a,b) => a.createdOn > b.createdOn ? -1 : 1)
     
     const getComments = () => {
-        console.log('getComments')
         return setRefetch(prev => !prev)
     }
     
@@ -35,9 +34,9 @@ const Section = () => {
                 <Link className="px-4 py-2 rounded-full bg-gray-200" href="/">Homepage</Link>
             </div>
             <div className="w-[min(90%,40em)] mx-auto p-3 bg-white h-fit">
-                {user ? <Form section={section} getComments={getComments}/> : <div><p>Login to add comments</p><Link href='/login'>Login here</Link></div>}
+                {user ? <Form section={section} getComments={getComments} setModal={setModal}/> : <div><p>Login to add comments</p><Link href='/login'>Login here</Link></div>}
             </div>
-            {sortedComments && sortedComments.length > 0 &&  <Comments comments={sortedComments} getComments={getComments}/>}
+            {sortedComments && sortedComments.length > 0 &&  <Comments setModal={setModal} comments={sortedComments} getComments={getComments}/>}
             {/* {isLoading && <p className="fixed top-[50%] left-[50%]">Loading spinner</p>} */}
             {error && <p>error</p>}
             {modal && (

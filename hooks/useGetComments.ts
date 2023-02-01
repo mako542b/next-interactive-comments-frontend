@@ -28,8 +28,7 @@ export default <T>(url: any, refetch: boolean) => {
                 return
             } catch (error: any) {
                 setIsLoading(false)
-                if(error?.response?.status === 401 || error?.response?.status === 403) {
-                    // router.push('/login')
+                if(error?.response?.status === 401 ) {
                     setModal(true)
                 }
                 else if(error?.name !== 'CanceledError') {
@@ -41,6 +40,7 @@ export default <T>(url: any, refetch: boolean) => {
         get()
         return () => abortController.abort()
     }, [url, refetch])
+
 
     return { comments, error, isLoading, modal, setModal}
 

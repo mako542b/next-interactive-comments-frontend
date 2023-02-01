@@ -3,7 +3,7 @@ import { TokenContext } from "./TokenProvider"
 import { useContext } from "react"
 import { useRouter } from "next/router"
 import useApiFunctions from '../controllers/useApiFunctions'
-import useAxios from "../hooks/useAxios"
+import { createMessage } from "../controllers/form.controllers"
 
 
 interface props {
@@ -11,17 +11,17 @@ interface props {
     replyingTo?: string;
     parentId? :string;
     getComments? :() => void;
-    setIsReplying?: Dispatch<SetStateAction<boolean>>; 
+    setIsReplying?: Dispatch<SetStateAction<boolean>>;
+    setModal?: Dispatch<SetStateAction<boolean>>;
 }
 
-const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
+const Form = ({ replyingTo, parentId, getComments, setIsReplying, setModal }: props) => {
 
     const [error, setError] = useState<string | null>(null)
     const { section } = useRouter().query
     const textArea = useRef<HTMLTextAreaElement>(null)
     const user = useContext(TokenContext)?.user
 
-    const axiosInstance = useAxios()
     const apiFunctions = useApiFunctions()
 
      return (
@@ -46,39 +46,24 @@ const Form = ({replyingTo, parentId, getComments, setIsReplying}: props) => {
     
     async function handleSubmit(e:FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        const messageDto = createMessage()
-        if(!messageDto) return
-        try {
-            const response = await apiFunctions.createComment(messageDto)
-            if(textArea?.current) textArea.current.value = ''
-            getComments?.()
-            setIsReplying?.(false)
-            return response
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    function createMessage() {
-        const content = trimReplyingTo(textArea?.current?.value as string)
+        const content = textArea?.current?.value as string
         if(content?.trim() === '') return setError('Comment cannot be empty')
-        const messageDto = {
-            user: user?._id,
-            content,
-            createdOn: new Date().toLocaleString(),
-            section,
-            parentId: parentId || null,
-            replyingTo,
-        }
-        return messageDto
+        const messageDto = createMessage(content, user?._id as string, section as string, parentId, replyingTo)
+        const response = await apiFunctions.createComment(messageDto)
+        if(response && response.error === 'timeout') setModal?.(true)
+        if(!response) return setError('Something went wrong')
+        resetForm()
+        return response
+    }
+    
+    function resetForm() {
+        if(textArea?.current) textArea.current.value = ''
+        getComments?.()
+        setIsReplying?.(false)
     }
 
-    function trimReplyingTo(text: string) {
-        if(!replyingTo) return text
-        const regex = new RegExp(`@${replyingTo}`,'i')
-        if(!regex.test(text)) return text
-        return text.replace(regex,'')
-    }
+    
+
 }
 
 export default Form

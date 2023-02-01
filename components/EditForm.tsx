@@ -6,9 +6,10 @@ interface props {
     prevContent: string,
     commentId?: string,
     getComments? :() => void,
+    setModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const EditForm = ({setIsEditing, prevContent, commentId, getComments}: props) => {
+const EditForm = ({setIsEditing, prevContent, commentId, getComments, setModal}: props) => {
 
     const apiFunctions = useApiFunctions()
     const editingContent = useRef<HTMLTextAreaElement>(null)
@@ -25,15 +26,12 @@ const EditForm = ({setIsEditing, prevContent, commentId, getComments}: props) =>
 
     async function handleEdit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        try {
-            const newContent = editingContent.current?.value as string
-            const editedComment = await apiFunctions.editCommentApi(commentId as string, newContent)
-            getComments?.()
-            setIsEditing(false)
-            return editedComment
-        } catch (error) {
-            return
-        }
+        const newContent = editingContent.current?.value as string
+        const response = await apiFunctions.editCommentApi(commentId as string, newContent)
+        if(response?.error === 'timeout') setModal(true)
+        getComments?.()
+        setIsEditing(false)
+        return response
     }
 
 }

@@ -3,6 +3,6 @@ export interface MessageBody {
     content: string | undefined;
     createdOn: string;
     section: string | string[] | undefined;
-    parentId: string | null;
+    parentId: string | undefined;
     replyingTo: string | undefined;
 }
