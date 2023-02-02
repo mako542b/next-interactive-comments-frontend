@@ -38,7 +38,7 @@ const Register = () => {
 
     return (
         <div className="grid place-content-center min-h-screen">
-            <h1 className="mb-16 text-xl text-center">Create new account</h1>
+            <h1 className="mb-10 text-xl text-center">Create new account</h1>
             <form onSubmit={handleSubmit} className="grid gap-6 place-content-center">
             <input required={true} minLength={6} ref={loginRef} className="outline outline-gray-900 rounded-full p-4" type="text" placeholder="login"/>
             <input required={true} minLength={6} ref={passwordRef} className="outline outline-gray-900 rounded-full p-4" type="password" placeholder="password"/>

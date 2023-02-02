@@ -35,6 +35,7 @@ export default <T>(url: any) => {
             } catch (error: any) {
                 setIsLoading(false)
                 if(error?.response?.status === 401 ) {
+                    context?.setUser(null)
                     setModal(true)
                 }
                 else if(error?.name !== 'CanceledError') {

@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 
-.test {
-    --fill-minus: #fff;
+.hover-effect {
+    @apply relative after:absolute after:bg-red-800 
+    after:bottom-[-2px] after:h-1 after:-inset-x-2 after:scale-x-0
+    after:hover:scale-x-100 after:transition-transform
+}
+
+a {
+    display: block;
 }

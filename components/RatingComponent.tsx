@@ -28,7 +28,6 @@ const RatingComponent: FunctionComponent<Props> = ({ comment, user }) => {
     
     // Sends api call to modify db
     async function handleRating(rate: 'upvote' | 'downvote') {
-        if(!user) return window.alert('Sign in to rate comments')
             const response = await handleRatingApi(comment._id, {
                     ratingUserId: user?._id as string,
                     rate

@@ -21,6 +21,7 @@ const useAxios = () => {
                     prevReq.headers.Authorization = `Bearer ${refreshToken}`
                     return axiosInstance(prevReq);
                 }
+                context?.setUser?.(null)
                 return Promise.reject(error)
             }
         )

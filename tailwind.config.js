@@ -8,6 +8,9 @@ module.exports = {
     extend: {
       fontFamily: {
         Rubik: ['Rubik', 'sans-serif']
+      },
+      gridTemplateRows : {
+        layout: 'auto 1fr'
       }
     },
   },

@@ -20,13 +20,16 @@ const Section = () => {
     
 
     return (
-        <div className="bg-[#f5f6fa] min-h-screen flex flex-col gap-6 py-10">
-            <div>
-                <Link className="px-4 py-2 rounded-full bg-gray-200" href="/">Homepage</Link>
-            </div>
-            <div className="w-[min(90%,40em)] mx-auto p-3 bg-white h-fit">
-                {user ? <Form section={section} /> : <div><p>Login to add comments</p><Link href='/login'>Login here</Link></div>}
-            </div>
+        <div className="bg-[#f5f6fa] flex flex-col gap-6 py-10">
+            {user ? (
+                <div className="w-[min(90%,40em)] mx-auto p-3 bg-white h-fit">
+                    <Form section={section} />
+                </div>
+            ) : (
+                <div className="grid place-content-center">
+                    <p>Login to add comments</p>
+                </div>
+            )}
             {sortedComments && sortedComments.length > 0 &&  <Comments comments={sortedComments} />}
             {/* {isLoading && <p className="fixed top-[50%] left-[50%]">Loading spinner</p>} */}
             {error && <p>error</p>}
