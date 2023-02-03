@@ -1,4 +1,5 @@
 import { commentInterface } from "./interfaces/commentInterface"
+import { formatTime } from "../controllers/formatTime"
 
 interface props {
     comment: commentInterface;
@@ -11,7 +12,7 @@ const CommentMetadata = ({ comment }: props) => {
                 <img src={`/avatars/${comment?.user?.avatar}`} alt="" />
             </div>
             <p className="text-[#324152]">{comment?.user ? comment?.user?.login : 'user deleted'}</p>
-            <p className="text-[#67727e]">{comment.createdOn}</p>
+            <p className="text-[#67727e]">{formatTime(comment.createdOn)}</p>
         </div>
     )
 }

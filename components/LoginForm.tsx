@@ -37,7 +37,6 @@ export default function LoginForm({ setModal }: any) {
           if(response.status > 300) return setError('Something went wrong')
           refreshUser(response.data.access_token)
           context?.setModal?.(false)
-          // const user = await axiosInstance.get('/auth.profile')
           if(router.pathname === '/login') return router.push('/comments/main')
           return 
           

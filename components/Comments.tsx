@@ -1,14 +1,18 @@
 import CommentModule from "./CommentModule"
 import { commentInterface } from "./interfaces/commentInterface"
+import { sortByTimestamp } from '../controllers/formatTime'
 
 interface propsInterface {
     comments: commentInterface[];
 }
 
 const Comments = ({ comments } : propsInterface) => {
+    
     const originalComments = comments.filter(comment => !comment.parentId)
+        .sort((a,b) => sortByTimestamp(a.createdOn, b.createdOn))
+
     const responses = (id: string) => {
-        return comments.filter(comment => comment.parentId === id).sort((a,b) => a.createdOn < b.createdOn ? -1 : 1)
+        return comments.filter(comment => comment.parentId === id).sort((a,b) => sortByTimestamp(a.createdOn, b.createdOn))
     }
 
     return (

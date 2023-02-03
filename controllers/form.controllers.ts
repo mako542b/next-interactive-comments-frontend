@@ -9,7 +9,7 @@ export function createMessage(
     return {
         user: userId,
         content,
-        createdOn: new Date().toLocaleString(),
+        createdOn: new Date().toISOString(),
         section,
         parentId,
         replyingTo,
